@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Webparts360 — Business‑Critical Apps + AI for Microsoft 365</title>
+  <meta name="description" content="Webparts360 delivers business‑critical workflows, AI, mobile field apps, and external data capture — all inside Microsoft Teams and SharePoint." />
+  <link rel="icon" href="W360Logo.svg" type="image/svg+xml" />
+  <style>
+    :root{
+      /* Palette extracted from W360Logo.svg */
+      --blue:#1c8ccc;   /* primary */
+      --green:#74ba45;  /* accent */
+      --orange:#fba729; /* highlight */
+      --ink:#231c23;    /* dark text */
+      --sand:#e3dfc7;   /* soft background */
+
+      /* Theme tokens */
+      --bg:#ffffff;
+      --bg-soft:#f8fbff; /* very light backdrop */
+      --text:var(--ink);
+      --muted:#4b5563;
+      --border:rgba(2,6,23,.12);
+      --card:#ffffff;
+      --radius:16px;
+      --maxw:1200px;
+      --shadow:0 12px 30px rgba(2,6,23,.08);
+      --shadow-sm:0 8px 20px rgba(2,6,23,.06);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+    /* Header / Nav */
+    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--ink)}
+    .brand img{width:36px;height:36px;display:block}
+    .menu{display:flex;align-items:center;gap:24px}
+    .menu a{color:var(--ink);opacity:.9}
+    .cta{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:var(--blue);color:#fff;padding:10px 16px;font-weight:800;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow-sm)}
+    .cta:hover{text-decoration:none;filter:brightness(1.05)}
+
+    .hamburger{display:none;cursor:pointer;border:1px solid var(--border);border-radius:10px;padding:8px;background:#fff}
+    .hamburger span{display:block;width:22px;height:2px;background:#111827;margin:4px 0}
+
+    @media (max-width:900px){
+      .menu{display:none}
+      .hamburger{display:block;margin-left:auto}
+      .mobile{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+      .mobile.open{display:block}
+      .mobile .container{display:grid;gap:6px;padding:14px 20px}
+      .mobile a{padding:12px 10px;border-radius:10px;color:var(--ink)}
+      .mobile a:hover{background:#f3f7fb;text-decoration:none}
+    }
+
+    /* Hero */
+    .hero{padding:64px 0 24px;background:linear-gradient(180deg,#ffffff 0%, #eef9ff 60%, #ffffff 100%)}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+    .eyebrow{color:var(--green);font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:12px}
+    h1{font-size:44px;line-height:1.08;margin:10px 0 12px}
+    .lead{font-size:18px;color:#475569}
+    .hero-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:12px 18px;font-weight:800;border:1px solid var(--border);background:#fff;color:var(--blue);box-shadow:var(--shadow-sm)}
+    .btn.primary{background:var(--blue);color:#fff}
+    .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+    .kpi{padding:14px;border:1px solid var(--border);border-radius:12px;background:#fff;box-shadow:var(--shadow-sm)}
+    .kpi em{font-style:normal;color:var(--green);font-weight:900}
+
+    @media (max-width:900px){
+      .hero-grid{grid-template-columns:1fr}
+      h1{font-size:34px}
+      .kpis{grid-template-columns:1fr 1fr}
+    }
+
+    /* Sections */
+    section{padding:64px 0;border-top:1px solid var(--border);background:#fff}
+    h2{font-size:32px;margin:0 0 8px}
+    p{color:#475569;line-height:1.65}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+    @media (max-width:900px){.split{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    @media (max-width:1050px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:700px){.cards{grid-template-columns:1fr}}
+
+    /* Image placeholders */
+    .img-frame{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:linear-gradient(135deg,#e0f2fe,#fff)}
+    .img-frame img{display:block;width:100%;height:100%;object-fit:cover}
+    .ratio-16x9{aspect-ratio:16/9}
+    .ratio-9x10{aspect-ratio:9/10}
+    .ratio-4x3{aspect-ratio:4/3}
+    .img-note{position:absolute;bottom:8px;left:8px;background:rgba(17,24,39,.6);color:#fff;font-size:12px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.22)}
+
+    /* Accent strips */
+    .strip{background:linear-gradient(90deg,var(--blue),var(--green),var(--orange));height:3px;border-radius:2px}
+
+    /* Footer */
+    footer{padding:40px 0;color:#475569;background:#fff}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:22px}
+    .footer-grid a{color:var(--ink)}
+    @media (max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+
+    /* Utilities */
+    .muted{color:#64748b}
+    .spacer{height:24px}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f8fafc;font-size:12px;margin-right:6px}
+    .emph{color:var(--blue);font-weight:800}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Webparts360 Home">
+        <img src="W360Logo.svg" alt="Webparts360" />
+        <span>Webparts360</span>
+      </a>
+      <nav class="menu" aria-label="Primary">
+        <a href="#gap">Why Us</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#ai">AI</a>
+        <a href="#outcomes">Outcomes</a>
+        <a href="#industries">Industries</a>
+        <a href="#experience">Experience</a>
+        <a class="cta" href="#contact">Book a Demo</a>
+      </nav>
+      <!-- Mobile hamburger on the right -->
+      <button class="hamburger" aria-label="Toggle navigation" aria-controls="mobileNav" aria-expanded="false" id="navToggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div id="mobileNav" class="mobile" aria-label="Mobile Navigation">
+      <div class="container">
+        <a href="#gap" onclick="toggleNav(false)">Why Us</a>
+        <a href="#solutions" onclick="toggleNav(false)">Solutions</a>
+        <a href="#ai" onclick="toggleNav(false)">AI</a>
+        <a href="#outcomes" onclick="toggleNav(false)">Outcomes</a>
+        <a href="#industries" onclick="toggleNav(false)">Industries</a>
+        <a href="#experience" onclick="toggleNav(false)">Experience</a>
+        <a href="#contact" class="cta" onclick="toggleNav(false)">Book a Demo</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Complete Microsoft 365</div>
+          <h1>Business‑Critical Apps and AI in Teams</h1>
+          <p class="lead">Deliver mission‑critical workflows, AI‑powered insights, mobile field apps, and external data capture — all inside Microsoft Teams and SharePoint. Designed around your logo palette for a clean, bright brand experience.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#contact">Book a Demo</a>
+            <a class="btn" href="#solutions">Explore Solutions</a>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><b>Weeks, not months</b><br><span class="muted">Rapid deployment</span></div>
+            <div class="kpi"><b>Lower TCO</b><br><span class="muted">Pragmatic delivery</span></div>
+            <div class="kpi"><b>Built for scale</b><br><span class="muted">SQL + audit trail</span></div>
+          </div>
+        </div>
+        <figure class="img-frame ratio-16x9">
+          <img src="images/hero-placeholder.jpg" alt="Teams workflow, mobile, and external form preview" />
+          <div class="img-note">Hero placeholder (16:9)</div>
+        </figure>
+      </div>
+      <div class="container" style="margin-top:12px"><div class="strip" aria-hidden="true"></div></div>
+    </section>
+
+    <!-- Gap -->
+    <section id="gap">
+      <div class="container split">
+        <div>
+          <h2>Forms are not enough. Business needs systems.</h2>
+          <p>Power Apps is ideal for quick forms, but costs and constraints surface when you need compliance, scale, mobile capture, or to include suppliers and customers. Webparts360 completes Microsoft 365 with enterprise‑ready workflows, SQL‑backed data, and AI — inside Teams, where your people already work.</p>
+        </div>
+        <figure class="img-frame ratio-4x3">
+          <img src="images/gap-placeholder.jpg" alt="Comparison of simple forms vs complete system in Teams" />
+          <div class="img-note">Comparison placeholder (4:3)</div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Solutions -->
+    <section id="solutions">
+      <div class="container">
+        <h2>Solutions</h2>
+        <p class="muted">Run your core processes in Teams. Extend them to the field. Bring in external partners. Add AI when it drives value.</p>
+        <div class="spacer"></div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="tag" style="border-color:var(--blue);color:var(--blue)">SmartBPM for Teams</div>
+            <h3>Business‑critical workflows in Teams</h3>
+            <p>Design and deploy state‑machine approvals with escalations and audit trails. Use SQL for reliability and performance. Add AI insights to keep work moving.</p>
+            <figure class="img-frame ratio-16x9" style="margin-top:12px">
+              <img src="images/solutions-smartbpm.jpg" alt="SmartBPM workflow screen" />
+              <div class="img-note">Placeholder: SmartBPM (16:9)</div>
+            </figure>
+          </div>
+
+          <div class="card">
+            <div class="tag" style="border-color:var(--green);color:var(--green)">External Data Gateway</div>
+            <h3>Configurable external forms</h3>
+            <p>Collect data from suppliers, customers, and contractors without requiring Microsoft 365 licenses. Submissions sync securely to SharePoint or SQL and flow into Teams workflows.</p>
+            <figure class="img-frame ratio-9x10" style="margin-top:12px">
+              <img src="images/solutions-gateway.jpg" alt="External form feeding data into Teams" />
+              <div class="img-note">Placeholder: External Forms (9:10)</div>
+            </figure>
+          </div>
+
+          <div class="card">
+            <div class="tag" style="border-color:var(--orange);color:var(--orange)">Mobile & Field Apps</div>
+            <h3>Android apps for SharePoint and Teams</h3>
+            <p>Enable offline capture with photos, GPS, and voice notes. Sync when online. Put Microsoft 365 in every worker's pocket without heavy customization.</p>
+            <figure class="img-frame ratio-16x9" style="margin-top:12px">
+              <img src="images/mobile-apps.jpg" alt="Android field app connected to Teams" />
+              <div class="img-note">Placeholder: Android Apps (16:9)</div>
+            </figure>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="tag" style="border-color:var(--blue);color:var(--blue)">AI for Microsoft 365</div>
+            <h3>AI that works where you work</h3>
+            <p>Unlock SQL with natural language (MCP), turn SharePoint libraries into self‑service agents (RAQ), and automate routing and reporting with AI‑powered workflows inside Teams.</p>
+            <figure class="img-frame ratio-16x9" style="margin-top:12px">
+              <img src="images/ai-solutions.jpg" alt="AI assistants inside Teams" />
+              <div class="img-note">Placeholder: AI in Teams (16:9)</div>
+            </figure>
+          </div>
+
+          <div class="card">
+            <div class="tag" style="border-color:var(--green);color:var(--green)">Value</div>
+            <h3>Pragmatic, cost‑effective delivery</h3>
+            <p>Achieve enterprise outcomes without enterprise overhead. Reduce licensing friction, avoid unnecessary rebuilds, and lower total cost while improving speed and reliability.</p>
+            <figure class="img-frame ratio-4x3" style="margin-top:12px">
+              <img src="images/value-placeholder.jpg" alt="Cost and time savings graphic" />
+              <div class="img-note">Placeholder: Value graphic (4:3)</div>
+            </figure>
+          </div>
+
+          <div class="card">
+            <div class="tag" style="border-color:var(--orange);color:var(--orange)">Power Platform Complete</div>
+            <h3>We complete, not compete</h3>
+            <p>Use Power Apps for simple forms. Call us when the process is critical, needs scale, or must include external partners and field staff. Everything stays inside Microsoft 365.</p>
+            <figure class="img-frame ratio-16x9" style="margin-top:12px">
+              <img src="images/complete-placeholder.jpg" alt="Diagram showing Webparts360 completing Power Platform" />
+              <div class="img-note">Placeholder: Integration (16:9)</div>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI focus strip -->
+    <section id="ai" style="background:var(--sand)">
+      <div class="container split">
+        <div>
+          <h2>AI that works where you work</h2>
+          <p>Make Microsoft 365 your intelligent business platform. Query your SQL databases in natural language with <span class="emph">MCP</span>, turn SharePoint libraries into self‑service knowledge agents with <span class="emph">RAQ</span>, and automate triage, routing, and reporting with <span class="emph">AI Workflows</span> — all inside Teams.</p>
+        </div>
+        <figure class="img-frame ratio-16x9">
+          <img src="images/ai-hero.jpg" alt="AI panel embedded in Teams" />
+          <div class="img-note">AI placeholder (16:9)</div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section id="outcomes">
+      <div class="container split">
+        <div>
+          <h2>Outcomes that matter</h2>
+          <p>Automate compliance‑ready approvals in HR, finance, and procurement. Standardize Planner with SQL‑backed reporting. Eliminate licensing friction with external data capture. Empower field and frontline staff with mobile apps. Add AI where it unlocks real value.</p>
+        </div>
+        <figure class="img-frame ratio-16x9">
+          <img src="images/outcomes-dashboard.jpg" alt="Unified dashboard and reports" />
+          <div class="img-note">Dashboard placeholder (16:9)</div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Industries -->
+    <section id="industries">
+      <div class="container">
+        <h2>Trusted where failure is not an option</h2>
+        <div class="cards">
+          <div class="card">
+            <h3>HR and Compliance</h3>
+            <p>Payroll, EPF/PCB/SOCSO, onboarding, and exit processes with auditability and controls inside Teams.</p>
+          </div>
+          <div class="card">
+            <h3>Finance</h3>
+            <p>CAPEX approvals, vendor onboarding, and expense controls with SQL persistence and complete trails.</p>
+          </div>
+          <div class="card">
+            <h3>Operations</h3>
+            <p>Planner standardization, inspections, and orchestration across teams with centralized reporting.</p>
+          </div>
+          <div class="card">
+            <h3>Construction and Property</h3>
+            <p>Field reporting, contractor collaboration, and safety audits with Android apps and external forms.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience">
+      <div class="container split">
+        <div>
+          <h2>Decades of enterprise‑grade delivery</h2>
+          <p>We have helped Microsoft global customers run business‑critical enterprise solutions on SharePoint and Microsoft 365 for decades. Our systems of engagement connect people, processes, and data so the right information reaches the right person at the right time.</p>
+          <p>Our expertise ensures smoother delivery, our experience reduces project risks, and our pragmatic approach maximizes your Microsoft 365 investment.</p>
+        </div>
+        <figure class="img-frame ratio-4x3">
+          <img src="images/experience.jpg" alt="Timeline of enterprise delivery and customer badges" />
+          <div class="img-note">Experience placeholder (4:3)</div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Contact / CTA -->
+    <section id="contact">
+      <div class="container split">
+        <div>
+          <h2>Complete Microsoft 365. Start in Teams.</h2>
+          <p>Deliver business‑critical apps, AI workflows, mobile extensions, and external data gateways — without overspending or rebuilding. Tell us your process and we will show you a working path in weeks, not months.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#">Book a Demo</a>
+            <a class="btn" href="#">Talk to a Partner</a>
+          </div>
+        </div>
+        <figure class="img-frame ratio-16x9">
+          <img src="images/cta.jpg" alt="Teams‑based approval with AI insight" />
+          <div class="img-note">CTA placeholder (16:9)</div>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="brand"><img src="W360Logo.svg" alt="Webparts360" style="width:28px;height:28px" /> <span style="margin-left:8px;font-weight:800">Webparts360</span></div>
+        <p class="muted">Business‑critical apps, AI, mobile, and external data capture for Microsoft 365.</p>
+      </div>
+      <div>
+        <strong>Company</strong><br />
+        <a href="#experience">About</a><br />
+        <a href="#industries">Industries</a><br />
+        <a href="https://proud-forest-08b441f10.1.azurestaticapps.net/dynamic/contact">Contact</a>
+      </div>
+      <div>
+        <strong>Solutions</strong><br />
+        <a href="index.html">SmartBPM</a><br />
+        <a href="#solutions">External Data Gateway</a><br />
+        <a href="#solutions">Mobile Apps</a><br />
+        <a href="#ai">AI for M365</a>
+      </div>
+      <div>
+        <strong>Resources</strong><br />
+        <a href="#gap">Why Us</a><br />
+        <a href="#outcomes">Outcomes</a><br />
+        <a href="#contact">Book a Demo</a>
+      </div>
+    </div>
+    <div class="container" style="border-top:1px solid var(--border);margin-top:18px;padding-top:18px">
+      <small class="muted">© <span id="y"></span> Webparts360. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    function toggleNav(force){
+      const open = typeof force === 'boolean' ? force : !mobileNav.classList.contains('open');
+      mobileNav.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    navToggle.addEventListener('click', () => toggleNav());
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

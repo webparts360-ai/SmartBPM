@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Webparts360 — Business‑Critical Apps + AI for Microsoft 365</title>
   <meta name="description" content="Webparts360 delivers business‑critical workflows, AI, mobile field apps, and external data capture — all inside Microsoft Teams and SharePoint." />
-  <link rel="icon" href="W360Logo.svg" type="image/svg+xml" sizes="any" />
+  <link rel="icon" href="W360.svg" type="image/svg+xml" sizes="any" />
   <link rel="icon" href="favicon.png" type="image/png" />
   <style>
     :root{
@@ -370,7 +370,7 @@
   <footer>
     <div class="container footer-grid">
       <div>
-        <div class="brand"><img src="W360Logo.svg" alt="Webparts360" style="width:28px;height:28px" /> <span style="margin-left:8px;font-weight:800">Webparts360</span></div>
+        <div class="brand"><img src="W360.svg" alt="Webparts360" style="width:28px;height:28px" /> <span style="margin-left:8px;font-weight:800">Webparts360</span></div>
         <p class="muted">Business‑critical apps, AI, mobile, and external data capture for Microsoft 365.</p>
       </div>
       <div>
@@ -381,7 +381,7 @@
       </div>
       <div>
         <strong>Solutions</strong><br />
-        <a href="#solutions">SmartBPM</a><br />
+        <a href="index.html">SmartBPM</a><br />
         <a href="#solutions">External Data Gateway</a><br />
         <a href="#solutions">Mobile Apps</a><br />
         <a href="#ai">AI for M365</a>
@@ -390,6 +390,7 @@
         <strong>Resources</strong><br />
         <a href="#gap">Why Us</a><br />
         <a href="#outcomes">Outcomes</a><br />
+        <a href="https://webparts360.wordpress.com/">Blogs</a><br />        
         <a href="#contact">Book a Demo</a>
       </div>
     </div>
@@ -412,7 +413,7 @@
     // Inline SVG logo for best rendering; fallback to <img> or simple gradient mark
     (async () => {
       try {
-        const res = await fetch('W360Logo.svg', {cache: 'force-cache'});
+        const res = await fetch('W360.svg', {cache: 'force-cache'});
         if (res.ok) {
           const svg = await res.text();
           const wrap = document.querySelector('.logo-wrap');

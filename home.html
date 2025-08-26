@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Webparts360 — Business‑Critical Apps + AI for Microsoft 365</title>
   <meta name="description" content="Webparts360 delivers business‑critical workflows, AI, mobile field apps, and external data capture — all inside Microsoft Teams and SharePoint." />
-  <link rel="icon" href="W360.svg" type="image/svg+xml" sizes="any" />
-  <link rel="icon" href="favicon.png" type="image/png" />  
+  <link rel="icon" href="W360Logo.svg" type="image/svg+xml" sizes="any" />
+  <link rel="icon" href="favicon.png" type="image/png" />
   <style>
     :root{
       /* Palette extracted from W360Logo.svg */
@@ -40,7 +40,8 @@
     header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
     .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
     .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--ink)}
-    .brand img{width:36px;height:36px;display:block}
+    .brand .logo-wrap{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;background:#fff;overflow:hidden}
+    .brand .logo-wrap img, .brand .logo-wrap svg{width:36px;height:36px;display:block}
     .menu{display:flex;align-items:center;gap:24px}
     .menu a{color:var(--ink);opacity:.9}
     .cta{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:var(--blue);color:#fff;padding:10px 16px;font-weight:800;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow-sm)}
@@ -119,7 +120,20 @@
   <header>
     <div class="container nav">
       <a class="brand" href="#top" aria-label="Webparts360 Home">
-        <img src="W360Logo.svg" alt="Webparts360" />
+        <span class="logo-wrap">
+          <img id="logoImg" src="W360Logo.svg" alt="" />
+          <svg id="logoFallback" viewBox="0 0 64 64" style="display:none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1c8ccc"/>
+                <stop offset="0.6" stop-color="#74ba45"/>
+                <stop offset="1" stop-color="#fba729"/>
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="12" fill="url(#g)"/>
+            <circle cx="32" cy="32" r="14" fill="#fff" opacity="0.9"/>
+          </svg>
+        </span>
         <span>Webparts360</span>
       </a>
       <nav class="menu" aria-label="Primary">
@@ -199,7 +213,7 @@
         <div class="cards">
           <div class="card">
             <div class="tag" style="border-color:var(--blue);color:var(--blue)">SmartBPM for Teams</div>
-            <h3><a href="index.html">Business‑critical workflows in Teams</a></h3>
+            <h3>Business‑critical workflows in Teams</h3>
             <p>Design and deploy state‑machine approvals with escalations and audit trails. Use SQL for reliability and performance. Add AI insights to keep work moving.</p>
             <figure class="img-frame ratio-16x9" style="margin-top:12px">
               <img src="images/solutions-smartbpm.jpg" alt="SmartBPM workflow screen" />
@@ -361,11 +375,11 @@
         <strong>Company</strong><br />
         <a href="#experience">About</a><br />
         <a href="#industries">Industries</a><br />
-        <a href="https://proud-forest-08b441f10.1.azurestaticapps.net/dynamic/contact">Contact</a>
+        <a href="#contact">Contact</a>
       </div>
       <div>
         <strong>Solutions</strong><br />
-        <a href="index.html">SmartBPM</a><br />
+        <a href="#solutions">SmartBPM</a><br />
         <a href="#solutions">External Data Gateway</a><br />
         <a href="#solutions">Mobile Apps</a><br />
         <a href="#ai">AI for M365</a>
@@ -374,7 +388,6 @@
         <strong>Resources</strong><br />
         <a href="#gap">Why Us</a><br />
         <a href="#outcomes">Outcomes</a><br />
-        <a href="https://webparts360.wordpress.com/" target="_blank">Blogs</a><br />        
         <a href="#contact">Book a Demo</a>
       </div>
     </div>
@@ -392,6 +405,39 @@
       navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
     navToggle.addEventListener('click', () => toggleNav());
+    // Inline SVG logo for best rendering; fallback to <img> or simple gradient mark
+    (async () => {
+      try {
+        const res = await fetch('W360Logo.svg', {cache: 'force-cache'});
+        if (res.ok) {
+          const svg = await res.text();
+          const wrap = document.querySelector('.logo-wrap');
+          if (wrap) {
+            wrap.innerHTML = svg;
+            const el = wrap.querySelector('svg');
+            if (el) {
+              el.setAttribute('width','36');
+              el.setAttribute('height','36');
+              el.setAttribute('aria-label','Webparts360');
+              el.setAttribute('role','img');
+            }
+          }
+        }
+      } catch (e) {
+        const img = document.getElementById('logoImg');
+        const fb = document.getElementById('logoFallback');
+        if (img) img.style.display = 'none';
+        if (fb) fb.style.display = 'block';
+      }
+    })();
+
+    const imgEl = document.getElementById('logoImg');
+    if (imgEl) imgEl.addEventListener('error', () => {
+      imgEl.style.display = 'none';
+      const fb = document.getElementById('logoFallback');
+      if (fb) fb.style.display = 'block';
+    });
+
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>

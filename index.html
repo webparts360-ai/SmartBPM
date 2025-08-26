@@ -146,21 +146,33 @@
         <h2>What the interface looks like</h2>
         <p class="lead">A quick, visual tour that builds trust without overwhelming details.</p>
         <div class="tabs" role="tablist" aria-label="Interface tour">
-          <button class="tab active" role="tab" aria-selected="true" aria-controls="pane-runbook" id="tab-runbook">Runbook View</button>
+          <button class="tab active" role="tab" aria-selected="true" aria-controls="pane-runbook" id="tab-runbook">Workflow View</button>
           <button class="tab" role="tab" aria-selected="false" aria-controls="pane-inbox" id="tab-inbox">Task Inbox</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="pane-cards" id="tab-cards">Channel Cards</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="pane-cards" id="tab-cards">Forms</button>
         </div>
         <div class="tabpanes" style="margin-top:14px">
           <div class="pane active card" id="pane-runbook" role="tabpanel" aria-labelledby="tab-runbook">
-            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
-            <p class="muted" style="margin-top:10px">Drag‑and‑drop stages, SLAs, owners, and rules. Non‑technical users can adjust flows safely.</p>
+            <div style="aspect-ratio:16/9;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+              <img src="SmartBPM-Workflow.png" 
+                   alt="SmartBPM Workflow Selection View" 
+                   style="width:100%;height:100%;object-fit:cover" />
+            </div>
+            <p class="muted" style="margin-top:10px">Flexible workflow stages with audit trails.</p>
           </div>
           <div class="pane card" id="pane-inbox" role="tabpanel" aria-labelledby="tab-inbox">
-            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
+            <div style="aspect-ratio:16/9;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+              <img src="SmartBPM-Dashboard.png" 
+                   alt="SmartBPM Inbox View" 
+                   style="width:100%;height:100%;object-fit:cover" />
+            </div>
             <p class="muted" style="margin-top:10px">See what’s due now, approvals in queue, and blockers. Human + AI summaries for faster action.</p>
           </div>
           <div class="pane card" id="pane-cards" role="tabpanel" aria-labelledby="tab-cards">
-            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
+            <div style="aspect-ratio:16/9;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+              <img src="SmartBPM-Form.png" 
+                   alt="SmartBPM Form View" 
+                   style="width:100%;height:100%;object-fit:cover" />
+            </div>
             <p class="muted" style="margin-top:10px">1‑click actions in Teams: approve, reassign, comment, attach files. Full audit history in context.</p>
           </div>
         </div>

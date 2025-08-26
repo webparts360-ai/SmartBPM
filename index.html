@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartBPM — Automate Workflows inside Microsoft Teams</title>
+  <meta name="description" content="SmartBPM is a no‑code automation app that runs inside Microsoft Teams. Launch workflows, connect data, and get a single view of work — without extra licensing." />
+  <style>
+    :root{
+      --bg:#ffffff;--card:#ffffff;--muted:#6b7280;--text:#0f172a;--primary:#4f46e5;--primary-600:#4338ca;--ring:#a5b4fc;--accent:#06b6d4;--border:#e5e7eb;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{--bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--text:#e5e7eb;--primary:#6366f1;--primary-600:#4f46e5;--ring:#6366f1;--accent:#22d3ee;--border:#172554}
+      body{background:linear-gradient(180deg,#0b1220, #0f172a 60%, #0b1220)}
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#f8fafc,#ffffff 40%,#f8fafc)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:14px;border:1px solid transparent;background:var(--primary);color:#fff;padding:.9rem 1.25rem;font-weight:600;cursor:pointer;transition:.2s}
+    .btn:hover{background:var(--primary-600)}
+    .btn.outline{background:transparent;color:var(--text);border-color:var(--border)}
+    .btn.outline:hover{border-color:var(--text)}
+    .pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:.35rem .7rem;font-size:.85rem;color:var(--muted)}
+    .grid{display:grid;gap:18px}
+    .grid-2{grid-template-columns:1fr}
+    .grid-3{grid-template-columns:1fr}
+    @media(min-width:880px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 6px 24px rgba(2,8,20,.04);padding:20px}
+    .muted{color:var(--muted)}
+    .section{padding:80px 0}
+    .section h2{font-size:2.1rem;margin:0 0 8px}
+    .section p.lead{margin:0 0 28px;color:var(--muted)}
+    .hero{position:relative;overflow:hidden}
+    .hero .bg{position:absolute;inset:0;background:radial-gradient(1200px 400px at 10% -10%, #eef2ff, transparent),radial-gradient(1200px 400px at 110% 0%, #ecfeff, transparent)}
+    .hero .wrap{position:relative;padding:90px 0}
+    .kicker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .headline{font-size:2.6rem;line-height:1.1;margin:0}
+    .headline .hl{background:#fde68a;padding:0 .35rem;border-radius:6px;transform:rotate(-1deg);display:inline-block}
+    .sub{font-size:1.12rem;color:var(--muted);margin:16px 0 20px}
+    .macbar{height:38px;background:#f3f4f6;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:0 12px;color:#6b7280}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.r{background:#ef4444}.dot.y{background:#f59e0b}.dot.g{background:#22c55e}
+    .preview{aspect-ratio:16/10;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(2,8,20,.1)}
+    .cards-compact .card{padding:16px}
+    .icon{width:22px;height:22px;display:inline-block}
+    .nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.7);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--border)}
+    .nav .inner{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .nav a{padding:10px 12px;border-radius:8px;font-weight:600;color:var(--muted)}
+    .nav a.active{color:var(--text);background:#f1f5f9}
+    @media (prefers-color-scheme: dark){.nav{background:rgba(13,18,32,.6)}.nav a.active{background:#0b1220}}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{border:1px solid var(--border);border-radius:12px;padding:.5rem .75rem;cursor:pointer}
+    .tab.active{background:#eef2ff;border-color:var(--ring)}
+    .tabpanes>.pane{display:none}
+    .tabpanes>.pane.active{display:block}
+    .faq .q{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .faq .a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+    .faq .item.open .a{max-height:200px}
+    .toast{position:fixed;right:16px;bottom:16px;background:var(--card);border:1px solid var(--border);padding:12px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(2,8,20,.15);display:none}
+    .toast.show{display:block}
+    .floating-cta{position:fixed;right:16px;bottom:16px;display:none}
+    .floating-cta.show{display:inline-flex}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <!-- Sticky Nav -->
+  <div class="nav">
+    <div class="container inner">
+      <strong>SmartBPM</strong>
+      <nav aria-label="Primary">
+        <a href="#problem">Problem</a>
+        <a href="#how">How it works</a>
+        <a href="#interface">Interface</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#offer">Offer</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a href="#offer" class="btn">Start Free Pilot</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="container wrap grid grid-2">
+      <div>
+        <div class="kicker">
+          <span class="pill">Runs inside Microsoft Teams</span>
+          <span class="pill">Support Microsoft components</span>
+          <span class="pill">Protected by Microsoft security</span>
+        </div>
+        <h1 class="headline">Automate business processes <span class="hl">right inside Teams</span></h1>
+        <p class="sub">SmartBPM is a configuration‑ready app for Microsoft 365. Launch workflows, connect line‑of‑business data, apply AI automation and get a single view of work — without low‑code projects or extra licensing.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 4px">
+          <a class="btn" href="#offer" id="cta-hero"><span aria-hidden>▶</span> Start Free Pilot</a>
+          <a class="btn outline" href="#demo">Book a 20‑min demo →</a>
+        </div>
+        <p class="muted" style="font-size:.95rem">No Power Apps per‑user license required. We set up your first workflow for free.</p>
+      </div>
+      <div>
+        <div class="preview" role="img" aria-label="SmartBPM preview in Microsoft Teams">
+          <div class="macbar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span style="margin-left:10px">Teams · SmartBPM</span></div>
+          <div style="padding:16px" class="grid grid-3 cards-compact">
+            <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Approvals</strong><span class="muted">⚡</span></div><p class="muted" style="margin:.4rem 0 0">1‑click kickoff · SLA · audit trail</p><a class="btn outline" style="margin-top:.7rem;padding:.5rem .8rem" href="#interface">Open</a></div>
+            <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Onboarding</strong><span class="muted">⚡</span></div><p class="muted" style="margin:.4rem 0 0">Tasks · checklists · owners</p><a class="btn outline" style="margin-top:.7rem;padding:.5rem .8rem" href="#interface">Open</a></div>
+            <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Service Requests</strong><span class="muted">⚡</span></div><p class="muted" style="margin:.4rem 0 0">Intake · triage · SLAs</p><a class="btn outline" style="margin-top:.7rem;padding:.5rem .8rem" href="#interface">Open</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- PROBLEM -->
+    <section id="problem" class="section">
+      <div class="container">
+        <h2>The everyday M365 pains we solve</h2>
+        <p class="lead">Manual handoffs, scattered updates, and 
+          <em>“check the spreadsheet”</em> chaos slow your business down. SmartBPM centralizes work where your team already lives: Teams.</p>
+        <div class="grid grid-3">
+          <div class="card"><strong>Disconnected tools</strong><p class="muted">Email, Sheets, and chats don’t add up to a process. Get a single pane of glass.</p></div>
+          <div class="card"><strong>Shadow workflows</strong><p class="muted">Untracked approvals and tasks risk compliance. Gain auditability and control.</p></div>
+          <div class="card"><strong>Stalled transformation</strong><p class="muted">Big‑bang IT projects stall. Start small in Teams, scale as you win.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="section">
+      <div class="container">
+        <h2>How SmartBPM works</h2>
+        <p class="lead">Three steps to live automation — no low‑code adventure required.</p>
+        <div class="grid grid-3">
+          <div class="card"><strong>1) Pick a template</strong><p class="muted">Approvals, onboarding, service desk and more. Start with a best‑practice flow or import your own steps.</p></div>
+          <div class="card"><strong>2) Connect your data & AI</strong><p class="muted">Hook into SharePoint/Dataverse/SQL/Line‑of‑Business systems. Activate GenAI for summaries, routing, and insights.</p></div>
+          <div class="card"><strong>3) Run inside Teams</strong><p class="muted">Launch, track, and collaborate in the channel you already use — on desktop and mobile.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERFACE (Interactive tabs) -->
+    <section id="interface" class="section">
+      <div class="container">
+        <h2>What the interface looks like</h2>
+        <p class="lead">A quick, visual tour that builds trust without overwhelming details.</p>
+        <div class="tabs" role="tablist" aria-label="Interface tour">
+          <button class="tab active" role="tab" aria-selected="true" aria-controls="pane-runbook" id="tab-runbook">Runbook View</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="pane-inbox" id="tab-inbox">Task Inbox</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="pane-cards" id="tab-cards">Channel Cards</button>
+        </div>
+        <div class="tabpanes" style="margin-top:14px">
+          <div class="pane active card" id="pane-runbook" role="tabpanel" aria-labelledby="tab-runbook">
+            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
+            <p class="muted" style="margin-top:10px">Drag‑and‑drop stages, SLAs, owners, and rules. Non‑technical users can adjust flows safely.</p>
+          </div>
+          <div class="pane card" id="pane-inbox" role="tabpanel" aria-labelledby="tab-inbox">
+            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
+            <p class="muted" style="margin-top:10px">See what’s due now, approvals in queue, and blockers. Human + AI summaries for faster action.</p>
+          </div>
+          <div class="pane card" id="pane-cards" role="tabpanel" aria-labelledby="tab-cards">
+            <div style="aspect-ratio:16/9;background:#f1f5f9;border:1px solid var(--border);border-radius:12px"></div>
+            <p class="muted" style="margin-top:10px">1‑click actions in Teams: approve, reassign, comment, attach files. Full audit history in context.</p>
+          </div>
+        </div>
+        <div class="grid grid-2" style="margin-top:16px">
+          <div class="card"><strong>Desktop & web</strong><p class="muted">Consistent UI in Teams on Windows, macOS, and browser.</p></div>
+          <div class="card"><strong>Mobile‑first actions</strong><p class="muted">Approve, comment, or reassign on the go.</p></div>
+          <div class="card"><strong>Secure in M365</strong><p class="muted">Leverages your existing identity & permissions.</p></div>
+          <div class="card"><strong>No‑code configuration</strong><p class="muted">Admins adjust flows without developers.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section id="benefits" class="section">
+      <div class="container">
+        <h2>Why business owners pick SmartBPM</h2>
+        <p class="lead">Designed for quick wins and measurable outcomes.</p>
+        <div class="grid grid-3">
+          <div class="card"><strong>Faster time‑to‑value</strong><p class="muted">Live in days, not months. We implement your first workflow at no cost.</p></div>
+          <div class="card"><strong>Lower total cost</strong><p class="muted">No extra per‑user licensing like Power Apps. Use what you already have.</p></div>
+          <div class="card"><strong>AI‑ready foundation</strong><p class="muted">Document processes, capture data, and switch on GenAI when you’re ready.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFER -->
+    <section id="offer" class="section">
+      <div class="container grid grid-2" style="align-items:center">
+        <div>
+          <h2>Kickstart offer: Give some to get more</h2>
+          <p class="lead">Risk‑free trial + concierge setup to prove value quickly.</p>
+          <ul class="muted">
+            <li>• 30‑day pilot inside your Teams tenant</li>
+            <li>• We configure 1 priority workflow for free</li>
+            <li>• Includes connectors to your core data sources</li>
+            <li>• Executive dashboard + ROI snapshot by week 4</li>
+          </ul>
+        </div>
+        <form id="pilot-form" class="card" novalidate>
+          <h3 style="margin:0 0 6px">Start your free pilot</h3>
+          <p class="muted" style="margin:0 0 12px">We’ll scope a single use case (approvals, onboarding, or service desk) and implement it in your Teams.</p>
+          <label class="sr-only" for="name">Name</label>
+          <input id="name" name="name" placeholder="Name" class="input" required>
+          <label class="sr-only" for="email">Work email</label>
+          <input id="email" name="email" type="email" placeholder="Work email" class="input" required>
+          <label class="sr-only" for="company">Company</label>
+          <input id="company" name="company" placeholder="Company" class="input">
+          <button class="btn" type="submit"><span aria-hidden>▶</span> Get Started</button>
+          <p id="form-msg" class="muted" style="margin-top:8px"></p>
+          <style>
+            .input{width:100%;margin:6px 0 10px;padding:.75rem .9rem;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text)}
+            .input:focus{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in srgb, var(--ring) 25%, transparent)}
+          </style>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <div class="container">
+        <h2>FAQ</h2>
+        <div class="faq">
+          <div class="item card">
+            <div class="q"><strong>Do I need Power Apps or Power Automate?</strong><button class="btn outline" aria-label="Toggle">Toggle</button></div>
+            <div class="a"><p class="muted">No. SmartBPM runs as a Teams app and does not require per‑user Power Apps licensing. We integrate with Microsoft 365 services you already have.</p></div>
+          </div>
+          <div class="item card">
+            <div class="q"><strong>Is it secure?</strong><button class="btn outline" aria-label="Toggle">Toggle</button></div>
+            <div class="a"><p class="muted">Yes. SmartBPM lives in your Microsoft 365 tenant, leveraging existing identity, permissions, and data governance.</p></div>
+          </div>
+          <div class="item card">
+            <div class="q"><strong>How fast can we go live?</strong><button class="btn outline" aria-label="Toggle">Toggle</button></div>
+            <div class="a"><p class="muted">Most pilots go live within days. Our team configures your first flow for free to demonstrate value quickly.</p></div>
+          </div>
+          <div class="item card">
+            <div class="q"><strong>Can we connect to our ERP/CRM?</strong><button class="btn outline" aria-label="Toggle">Toggle</button></div>
+            <div class="a"><p class="muted">Yes. We provide connectors for common line‑of‑business systems and APIs for custom data sources.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--border)">
+    <div class="container" style="display:grid;gap:16px;grid-template-columns:1fr;align-items:center;padding:28px 0">
+      <div class="muted">© <span id="year"></span> SmartBPM. Built for Microsoft 365.</div>
+      <div style="text-align:right"><a href="#offer" class="btn">Talk to Sales →</a></div>
+    </div>
+  </footer>
+
+  <a href="#offer" class="btn floating-cta" id="floating-cta">Start Free Pilot</a>
+  <div class="toast" id="toast" role="status" aria-live="polite">Thanks! We’ll reach out shortly.</div>
+
+  <script>
+    // Sticky nav active link + smooth scroll
+    const navLinks = document.querySelectorAll('.nav nav a');
+    navLinks.forEach(a=>a.addEventListener('click', (e)=>{
+      if(a.hash){ e.preventDefault(); document.querySelector(a.hash)?.scrollIntoView({behavior:'smooth'}); }
+    }));
+    const sections = [...document.querySelectorAll('main section')];
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(ent=>{
+        if(ent.isIntersecting){
+          navLinks.forEach(a=>a.classList.toggle('active', a.hash === '#' + ent.target.id));
+        }
+      })
+    },{rootMargin:'-50% 0px -50% 0px', threshold:0});
+    sections.forEach(s=>obs.observe(s));
+
+    // Tabs in Interface section
+    const tabs = document.querySelectorAll('.tab');
+    const panes = document.querySelectorAll('.tabpanes .pane');
+    tabs.forEach(t=>t.addEventListener('click',()=>{
+      tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+      panes.forEach(p=>p.classList.toggle('active', p.id === t.getAttribute('aria-controls')));
+      tabs.forEach(x=>x.setAttribute('aria-selected', x===t ? 'true':'false'));
+    }));
+
+    // FAQ accordions
+    document.querySelectorAll('.faq .item .q button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const item = btn.closest('.item');
+        item.classList.toggle('open');
+      });
+    });
+
+    // Form (demo only)
+    const form = document.getElementById('pilot-form');
+    const msg = document.getElementById('form-msg');
+    const toast = document.getElementById('toast');
+    form?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      if(!data.email || !String(data.email).includes('@')){ msg.textContent = 'Please enter a valid work email.'; return; }
+      msg.textContent = '';
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 2500);
+      form.reset();
+    });
+
+    // Floating CTA after scrolling
+    const cta = document.getElementById('floating-cta');
+    const heroCta = document.getElementById('cta-hero');
+    let lastY = 0;
+    window.addEventListener('scroll',()=>{
+      const y = window.scrollY; const show = y > 600;
+      cta.classList.toggle('show', show);
+      lastY = y;
+    });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

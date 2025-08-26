@@ -43,6 +43,8 @@
     .brand .logo-wrap{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;background:#fff;overflow:hidden}
     .brand .logo-wrap img, .brand .logo-wrap svg{width:36px;height:36px;display:block}
     .menu{display:flex;align-items:center;gap:24px}
+    /* Ensure mobile menu is hidden on desktop */
+    .mobile{display:none} 
     .menu a{color:var(--ink);opacity:.9}
     .cta{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:var(--blue);color:#fff;padding:10px 16px;font-weight:800;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow-sm)}
     .cta:hover{text-decoration:none;filter:brightness(1.05)}
@@ -405,6 +407,8 @@
       navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
     navToggle.addEventListener('click', () => toggleNav());
+    // Close mobile nav when resizing to desktop
+    window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleNav(false); });
     // Inline SVG logo for best rendering; fallback to <img> or simple gradient mark
     (async () => {
       try {

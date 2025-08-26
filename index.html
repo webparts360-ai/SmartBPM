@@ -48,6 +48,33 @@
     .nav .inner{display:flex;align-items:center;justify-content:space-between;height:56px}
     .nav a{padding:10px 12px;border-radius:8px;font-weight:600;color:var(--muted)}
     .nav a.active{color:var(--text);background:#f1f5f9}
+    .hamburger{
+        display:inline-flex;align-items:center;justify-content:center;
+        width:40px;height:40px;border:1px solid var(--border);
+        border-radius:10px;background:transparent;cursor:pointer;font-size:1.1rem
+      }
+.menu{
+        display:none;position:absolute;right:16px;top:60px;background:var(--card);
+        border:1px solid var(--border);border-radius:14px;
+        box-shadow:0 12px 40px rgba(2,8,20,.15);padding:8px;min-width:240px
+      }
+.menu nav a{display:block;padding:10px 12px;border-radius:8px}
+.menu nav a:hover{background:#f1f5f9}
+.menu .btn.cta{width:100%;margin-top:6px;justify-content:center}
+.menu.open{display:block}
+
+/* Desktop layout */
+@media(min-width:880px){
+  .hamburger{display:none}
+  .menu{
+    display:flex !important;position:static;box-shadow:none;border:none;
+    background:transparent;padding:0;gap:8px;align-items:center
+  }
+  .menu nav{display:flex;gap:6px}
+  .menu nav a{display:inline-block}
+  .menu .btn.cta{width:auto;margin-top:0}
+}
+
     @media (prefers-color-scheme: dark){.nav{background:rgba(13,18,32,.6)}.nav a.active{background:#0b1220}}
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
     .tab{border:1px solid var(--border);border-radius:12px;padding:.5rem .75rem;cursor:pointer}
@@ -66,20 +93,22 @@
 </head>
 <body>
   <!-- Sticky Nav -->
-  <div class="nav">
-    <div class="container inner">
-      <strong>SmartBPM</strong>
-      <nav aria-label="Primary">
-        <a href="#problem">Problem</a>
-        <a href="#how">How it works</a>
-        <a href="#interface">Interface</a>
-        <a href="#benefits">Benefits</a>
-        <a href="#offer">Offer</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-      <a href="#offer" class="btn">Start Free Pilot</a>
-    </div>
-  </div>
+<!-- Mobile hamburger -->
+<button class="hamburger" id="nav-toggle" aria-expanded="false" aria-controls="primary-menu" aria-label="Toggle navigation">☰</button>
+
+<!-- Menu (dropdown on mobile, inline on desktop) -->
+<div class="menu" id="primary-menu">
+  <nav aria-label="Primary">
+    <a href="#problem">Problem</a>
+    <a href="#how">How it works</a>
+    <a href="#interface">Interface</a>
+    <a href="#benefits">Benefits</a>
+    <a href="#offer">Offer</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <a href="#offer" class="btn cta">Start Free Pilot</a>
+</div>
+
 
   <!-- HERO -->
   <header class="hero">
@@ -267,65 +296,80 @@
   <a href="#offer" class="btn floating-cta" id="floating-cta">Start Free Pilot</a>
   <div class="toast" id="toast" role="status" aria-live="polite">Thanks! We’ll reach out shortly.</div>
 
-  <script>
-    // Sticky nav active link + smooth scroll
-    const navLinks = document.querySelectorAll('.nav nav a');
-    navLinks.forEach(a=>a.addEventListener('click', (e)=>{
-      if(a.hash){ e.preventDefault(); document.querySelector(a.hash)?.scrollIntoView({behavior:'smooth'}); }
-    }));
-    const sections = [...document.querySelectorAll('main section')];
-    const obs = new IntersectionObserver((entries)=>{
-      entries.forEach(ent=>{
-        if(ent.isIntersecting){
-          navLinks.forEach(a=>a.classList.toggle('active', a.hash === '#' + ent.target.id));
-        }
-      })
-    },{rootMargin:'-50% 0px -50% 0px', threshold:0});
-    sections.forEach(s=>obs.observe(s));
+<script>
+  // Mobile nav toggle
+  const menu = document.getElementById('primary-menu');
+  const toggleBtn = document.getElementById('nav-toggle');
+  function closeMenu(){ menu.classList.remove('open'); toggleBtn?.setAttribute('aria-expanded','false'); }
+  toggleBtn?.addEventListener('click', ()=>{
+    const open = menu.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', (e)=>{
+    if(!menu.contains(e.target) && !toggleBtn.contains(e.target)) closeMenu();
+  });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-    // Tabs in Interface section
-    const tabs = document.querySelectorAll('.tab');
-    const panes = document.querySelectorAll('.tabpanes .pane');
-    tabs.forEach(t=>t.addEventListener('click',()=>{
-      tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
-      panes.forEach(p=>p.classList.toggle('active', p.id === t.getAttribute('aria-controls')));
-      tabs.forEach(x=>x.setAttribute('aria-selected', x===t ? 'true':'false'));
-    }));
-
-    // FAQ accordions
-    document.querySelectorAll('.faq .item .q button').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const item = btn.closest('.item');
-        item.classList.toggle('open');
-      });
-    });
-
-    // Form (demo only)
-    const form = document.getElementById('pilot-form');
-    const msg = document.getElementById('form-msg');
-    const toast = document.getElementById('toast');
-    form?.addEventListener('submit', (e)=>{
+  // Sticky nav active link + smooth scroll
+  const navLinks = document.querySelectorAll('.menu a[href^="#"]');
+  navLinks.forEach(a=>a.addEventListener('click', (e)=>{
+    const hash = a.getAttribute('href');
+    if(hash && hash.startsWith('#')){
       e.preventDefault();
-      const data = Object.fromEntries(new FormData(form));
-      if(!data.email || !String(data.email).includes('@')){ msg.textContent = 'Please enter a valid work email.'; return; }
-      msg.textContent = '';
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'), 2500);
-      form.reset();
-    });
+      document.querySelector(hash)?.scrollIntoView({behavior:'smooth'});
+      closeMenu();
+    }
+  }));
+  const sections = [...document.querySelectorAll('main section')];
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(ent=>{
+      if(ent.isIntersecting){
+        navLinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href') === '#' + ent.target.id));
+      }
+    })
+  },{rootMargin:'-50% 0px -50% 0px', threshold:0});
+  sections.forEach(s=>obs.observe(s));
 
-    // Floating CTA after scrolling
-    const cta = document.getElementById('floating-cta');
-    const heroCta = document.getElementById('cta-hero');
-    let lastY = 0;
-    window.addEventListener('scroll',()=>{
-      const y = window.scrollY; const show = y > 600;
-      cta.classList.toggle('show', show);
-      lastY = y;
-    });
+  // Tabs in Interface section
+  const tabs = document.querySelectorAll('.tab');
+  const panes = document.querySelectorAll('.tabpanes .pane');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+    panes.forEach(p=>p.classList.toggle('active', p.id === t.getAttribute('aria-controls')));
+    tabs.forEach(x=>x.setAttribute('aria-selected', x===t ? 'true':'false'));
+  }));
 
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  // FAQ accordions
+  document.querySelectorAll('.faq .item .q button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const item = btn.closest('.item');
+      item.classList.toggle('open');
+    });
+  });
+
+  // Form (demo only)
+  const form = document.getElementById('pilot-form');
+  const msg = document.getElementById('form-msg');
+  const toast = document.getElementById('toast');
+  form?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    if(!data.email || !String(data.email).includes('@')){ msg.textContent = 'Please enter a valid work email.'; return; }
+    msg.textContent = '';
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 2500);
+    form.reset();
+  });
+
+  // Floating CTA after scrolling
+  const cta = document.getElementById('floating-cta');
+  window.addEventListener('scroll',()=>{
+    const y = window.scrollY; const show = y > 600;
+    cta?.classList.toggle('show', show);
+  });
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
